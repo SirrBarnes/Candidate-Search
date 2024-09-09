@@ -84,6 +84,11 @@ main {
   align-items: center;
 }
 
+.table {
+  width: 80vw;
+  table-layout: fixed;
+}
+
 tr {
   border-radius: 10px;
   background-color: #000;
@@ -112,9 +117,4 @@ tbody tr:nth-child(odd) {
 
 .active {
   font-weight: 700;
-}
-
-.table {
-  width: 80vw;
-  table-layout: fixed;
 }
