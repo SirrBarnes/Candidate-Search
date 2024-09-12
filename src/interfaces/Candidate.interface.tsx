@@ -1,11 +1,9 @@
 // TODO: Create an interface for the Candidate objects returned by the API
-interface CandidateSearch {
+export interface Candidate {
     image: string,
     name: string,
-    location: string,
-    email: string,
-    company: string,
-    bio: string,
+    location: string | null,
+    email: string | null,
+    company: string | null,
+    bio: string | null,
 };
-
-export default CandidateSearch;

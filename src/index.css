@@ -118,3 +118,7 @@ tbody tr:nth-child(odd) {
 .active {
   font-weight: 700;
 }
+
+.denyButton {
+  
+}
