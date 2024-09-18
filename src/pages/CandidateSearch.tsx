@@ -9,6 +9,7 @@ const CandidateSearch = () => {
 
   const candidateApprove = () => {
     localStorage.setItem("SavedCandidates", JSON.stringify(candidates));
+    searchGithub();
   }
 
   useEffect(() => {
