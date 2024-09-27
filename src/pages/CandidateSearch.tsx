@@ -6,23 +6,37 @@ import { Candidate } from '../interfaces/Candidate.interface';
 const CandidateSearch = () => {
   const [candidates, setCandidates] = useState<Candidate | null>(null);
 
+  const fetchUser = async () => {
+    setCandidates(null);
+
+    try {
+      const data = await searchGithub();
+      console.log(data);
+      setCandidates(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const candidateApprove = () => {
-    localStorage.setItem("SavedCandidates", JSON.stringify(candidates));
-    searchGithub();
+    if (!candidates) {
+      return;
+    }
+
+    const approvedCandidates = JSON.parse(localStorage.getItem('SavedCandidates') || '[]');
+
+    const currentCandidates = [...approvedCandidates, candidates];
+
+    localStorage.setItem("SavedCandidates", JSON.stringify(currentCandidates))
+
+    fetchUser();
   }
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const data = await searchGithub();
-        setCandidates(data);
-      } catch(error) {
-        console.error('Error fetching data');
-      }
-    };
-    getData();
+    fetchUser();
   }, []);
+
+  
 
   if (!candidates) {
     return <div>Please Wait...</div>;
@@ -30,18 +44,19 @@ const CandidateSearch = () => {
 
   return (
     <>
-      <h1>Candidate Search</h1>
       <main>
-        <img src = {candidates.image} alt = "User Profile Image"></img>
-        <p>Username: {candidates.name}</p>
-        <p>Location: {candidates.location} </p>
-        <p>Email: {candidates.email}</p>
-        <p>Company: {candidates.company}</p>
-        <p>Bio: {candidates.bio}</p>
-        <div>
-          <button onClick = {searchGithub}>Deny</button>
-          <button onClick = {candidateApprove}>Approve</button>
-        </div>
+        <h1>Candidate Search</h1>
+        <img src = {candidates.avatar_url} alt = {`${candidates.login}'s avatar`}></img>
+            <p>Username: {candidates.login}</p>
+            <p>Location: {candidates.location || 'N/A'} </p>
+            <p>Email: {candidates.email || 'N/A'}</p>
+            <p>Company: {candidates.company || 'N/A'}</p>
+            <p>Bio: {candidates.bio || 'N/A'}</p>
+
+            <div className = 'candidateButton'>
+              <button onClick = {fetchUser}>Deny</button>
+              <button onClick = {candidateApprove}>Approve</button>
+            </div>
       </main>
     </>
   )

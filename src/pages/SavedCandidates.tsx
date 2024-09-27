@@ -5,21 +5,24 @@ import { Candidate } from "../interfaces/Candidate.interface";
 const SavedCandidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
-  useEffect(() => {
-    const potentialCandidates = localStorage.getItem("SavedCandidates");
-
-    if (potentialCandidates) {
-      setCandidates([JSON.parse(potentialCandidates)]);
-    }
-  }, [])
 
 
 
   const handleDeny = (name: string) => {
-    const newCandidates = candidates.filter(candidates => candidates.name !== name)
+    const newCandidates = candidates.filter(candidates => candidates.login !== name)
     setCandidates(newCandidates);
     localStorage.setItem("SavedCandidates", JSON.stringify(newCandidates));
   }
+
+  useEffect(() => {
+    const fetchCandidates = () => {
+      const data = JSON.parse(localStorage.getItem('SavedCandidates') || "")
+
+      setCandidates(data);
+    }
+
+    fetchCandidates();
+  }, [])
 
 
   return (
@@ -39,17 +42,17 @@ const SavedCandidates = () => {
         </thead>
         <tbody className = "tbody">
           {candidates.map((candidate) => (
-            <tr key = "${candidate.name}" className = "tr">
+            <tr key = {`${candidate.login}`} className = "tr">
               <td>
-                <img src = {candidate.image} alt = "User Profile Image"></img>
+                <img src = {candidate.avatar_url} alt = "User Profile Image" className = "tableImage"></img>
               </td>
-              <td>{candidate.name}</td>
+              <td>{candidate.login}</td>
               <td>{candidate.location}</td>
               <td>{candidate.email}</td>
               <td>{candidate.company}</td>
               <td>{candidate.bio}</td>
               <td>
-                <button onClick = {() => handleDeny(candidate.name)} className = "denyButton">Deny</button>
+                <button onClick = {() => handleDeny(candidate.login)} className = "denyButton">Deny</button>
               </td>
             </tr>
           ))}
